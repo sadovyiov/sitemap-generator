@@ -1,6 +1,9 @@
 sitemap-generator
 =================
 
+This is a fork of github.com/saeedfalsafin/somepkg.
+Original work © 2022 Saeed Falsafin, licensed under MIT.
+
 [![GoDoc](https://godoc.org/github.com/sabloger/sitemap-generator?status.svg)](https://godoc.org/github.com/sabloger/sitemap-generator)
 [![Go Report Card](https://goreportcard.com/badge/github.com/sabloger/sitemap-generator)](https://goreportcard.com/report/github.com/sabloger/sitemap-generator)
 
@@ -12,7 +15,7 @@ Please see http://www.sitemaps.org/ for description of sitemap contents.
 ## Installation
 Use `go get`:
 
-`go get github.com/sabloger/sitemap-generator`
+`go get github.com/sadovyiov/sitemap-generator`
 
 # How to Use sitemap-generator
 
@@ -25,7 +28,7 @@ package main
 
 import (
   "fmt"
-  "github.com/sabloger/sitemap-generator/smg"
+  "github.com/sadovyiov/sitemap-generator/smg"
   "log"
   "time"
 )
