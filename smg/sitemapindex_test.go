@@ -156,9 +156,9 @@ func TestLargeURLSetSitemap(t *testing.T) {
 	// Checking the larger sitemap which was no-name, file no. 1:
 	assertOutputFile(t, path, "large"+fileExt)
 	//  file no. 2:
-	assertOutputFile(t, path, "large1"+fileExt)
+	assertOutputFile(t, path, "large_1"+fileExt)
 	//  file no. 3:
-	assertOutputFile(t, path, "large2"+fileExt)
+	assertOutputFile(t, path, "large_2"+fileExt)
 }
 
 // TestLargeURLSetSitemap tests another one with 100001 items to be split to five files max 25k each
@@ -242,7 +242,7 @@ func TestBigSizeSitemap(t *testing.T) {
 
 	assertOutputFile(t, path, "big"+fileExt)
 	// no. 2:
-	assertOutputFile(t, path, "big1"+fileExt)
+	assertOutputFile(t, path, "big_1"+fileExt)
 }
 
 // TestSitemapIndexSave tests that on SitemapIndex.Save(), function produces a proper URL path to the sitemap
