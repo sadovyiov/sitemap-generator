@@ -235,7 +235,7 @@ func (s *Sitemap) Save() (filenames []string, err error) {
 	// Appends the fileNum at the end of filename in case of more than 0 (it is extended Sitemap)
 	var filename string
 	if s.fileNum > 0 {
-		filename = fmt.Sprintf("%s%d", s.Name, s.fileNum)
+		filename = fmt.Sprintf("%s_%d", s.Name, s.fileNum)
 	} else {
 		filename = s.Name
 	}
