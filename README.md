@@ -92,7 +92,7 @@ package main
 
 import (
   "fmt"
-  "github.com/sabloger/sitemap-generator/smg"
+  "github.com/sadovyiov/sitemap-generator/smg"
   "log"
   "time"
 )

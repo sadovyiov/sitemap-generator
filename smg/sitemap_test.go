@@ -14,6 +14,9 @@ import (
 
 type UrlSet struct {
 	XMLName xml.Name  `xml:"urlset"`
+	Xmlns   string    `xml:"xmlns,attr"`
+	XmlnsImage string `xml:"xmlns:image,attr"`
+	XmlnsXhtml string `xml:"xmlns:xhtml,attr"`
 	Urls    []UrlData `xml:"url"`
 }
 
@@ -24,7 +27,7 @@ type UrlData struct {
 	ChangeFreq string                 `xml:"changefreq"`
 	Priority   string                 `xml:"priority"`
 	Images     []SitemapImageData     `xml:"image"`
-	Alternate  []SitemapAlternateData `xml:"xhtml link"`
+	Alternate  []SitemapAlternateData `xml:"http://www.w3.org/1999/xhtml link"`
 }
 
 type SitemapImageData struct {
