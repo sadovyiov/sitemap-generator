@@ -1,7 +1,7 @@
 sitemap-generator
 =================
 
-This is a fork of github.com/saeedfalsafin/somepkg.
+This is a fork of github.com/sabloger/sitemap-generator.
 Original work © 2022 Saeed Falsafin, licensed under MIT.
 
 [![GoDoc](https://godoc.org/github.com/sabloger/sitemap-generator?status.svg)](https://godoc.org/github.com/sabloger/sitemap-generator)
