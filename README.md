@@ -47,7 +47,7 @@ func main() {
   // Adding URL items
   err := sm.Add(&smg.SitemapLoc{
     Loc:        "some/uri.html",
-    LastMod:    smg.NewLastModTime(&now),    // or smg.NewLastModString("2024-01-01")
+    LastMod:    smg.LastModTime(&now),    // or smg.LastModString("2024-01-01")
     ChangeFreq: smg.Always,
     Priority:   0.4,
     Images:     []*smg.SitemapImage{{"/path-to-image.jpg"}, {"/path-to-image-2.jpg"}},
@@ -112,7 +112,7 @@ func main() {
   smBlog.SetLastMod(&now)
   err := smBlog.Add(&smg.SitemapLoc{
     Loc:        "blog/post/1231",
-    LastMod:    smg.NewLastModTime(&now),
+    LastMod:    smg.LastModTime(&now),
     ChangeFreq: smg.Weekly,
     Priority:   0.8,
   })
@@ -124,7 +124,7 @@ func main() {
   smNews.SetLastMod(&now)
   err = smNews.Add(&smg.SitemapLoc{
     Loc:        "news/2021-01-05/a-news-page",
-    LastMod:    smg.NewLastModTime(&now),
+    LastMod:    smg.LastModTime(&now),
     ChangeFreq: smg.Weekly,
     Priority:   1,
   })
@@ -175,13 +175,13 @@ sitemap_index_example
 // From a time.Time value (formatted as RFC3339Nano in the output)
 sm.Add(&smg.SitemapLoc{
   Loc:     "page/1",
-  LastMod: smg.NewLastModTime(&now),
+  LastMod: smg.LastModTime(&now),
 })
 
 // From a pre-formatted string (written as-is)
 sm.Add(&smg.SitemapLoc{
   Loc:     "page/2",
-  LastMod: smg.NewLastModString("2024-06-01"),
+  LastMod: smg.LastModString("2024-06-01"),
 })
 ```
 

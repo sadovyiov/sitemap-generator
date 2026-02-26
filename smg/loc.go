@@ -11,13 +11,13 @@ type LastModValue struct {
 	str string
 }
 
-// NewLastModTime creates a LastModValue from a *time.Time.
-func NewLastModTime(t *time.Time) *LastModValue {
+// LastModTime creates a LastModValue from a *time.Time.
+func LastModTime(t *time.Time) *LastModValue {
 	return &LastModValue{t: t}
 }
 
-// NewLastModString creates a LastModValue from a string.
-func NewLastModString(s string) *LastModValue {
+// LastModString creates a LastModValue from a string.
+func LastModString(s string) *LastModValue {
 	return &LastModValue{str: s}
 }
 
