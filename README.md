@@ -47,10 +47,10 @@ func main() {
   // Adding URL items
   err := sm.Add(&smg.SitemapLoc{
     Loc:        "some/uri.html",
-    LastMod:    &now,
+    LastMod:    smg.NewLastModTime(&now),    // or smg.NewLastModString("2024-01-01")
     ChangeFreq: smg.Always,
     Priority:   0.4,
-		Images:     []*SitemapImage{{"/path-to-image.jpg"}, {"/path-to-image-2.jpg"}},
+    Images:     []*smg.SitemapImage{{"/path-to-image.jpg"}, {"/path-to-image-2.jpg"}},
   })
   if err != nil {
     log.Fatal("Unable to add SitemapLoc:", err)
@@ -112,7 +112,7 @@ func main() {
   smBlog.SetLastMod(&now)
   err := smBlog.Add(&smg.SitemapLoc{
     Loc:        "blog/post/1231",
-    LastMod:    &now,
+    LastMod:    smg.NewLastModTime(&now),
     ChangeFreq: smg.Weekly,
     Priority:   0.8,
   })
@@ -124,7 +124,7 @@ func main() {
   smNews.SetLastMod(&now)
   err = smNews.Add(&smg.SitemapLoc{
     Loc:        "news/2021-01-05/a-news-page",
-    LastMod:    &now,
+    LastMod:    smg.NewLastModTime(&now),
     ChangeFreq: smg.Weekly,
     Priority:   1,
   })
@@ -167,6 +167,44 @@ sitemap_index_example
 ```
 
 
+### LastMod — time or string
+
+`SitemapLoc.LastMod` accepts either a `*time.Time` or a plain string via the `LastModValue` type:
+
+```go
+// From a time.Time value (formatted as RFC3339Nano in the output)
+sm.Add(&smg.SitemapLoc{
+  Loc:     "page/1",
+  LastMod: smg.NewLastModTime(&now),
+})
+
+// From a pre-formatted string (written as-is)
+sm.Add(&smg.SitemapLoc{
+  Loc:     "page/2",
+  LastMod: smg.NewLastModString("2024-06-01"),
+})
+```
+
+### Custom urlset open tag
+
+By default each sitemap file starts with:
+```xml
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+```
+
+You can override it via `SetUrlsetOpenTag` before any `Add` calls:
+
+```go
+// On a standalone Sitemap
+sm := smg.NewSitemap(false)
+sm.SetUrlsetOpenTag(`<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`)
+
+// On a SitemapIndex — propagates to all child sitemaps
+smi := smg.NewSitemapIndex(false)
+smi.SetUrlsetOpenTag(`<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`)
+sm := smi.NewSitemap() // inherits the custom tag automatically
+```
+
 ### Custom output buffer for Sitemap files
 It is possible to write the `Sitemap` content into a custom output using this method:
 
@@ -193,6 +231,8 @@ n, err = sm.WriteTo(&buf)
   - [x] Implement Sitemap.WriteTo for custom outputs.
   - [ ] Implement SitemapIndex.WriteTo for custom outputs.
   - [x] Ability to change maximum URLs number for each file.
+  - [x] Configurable urlset open tag (`SetUrlsetOpenTag`).
+  - [x] `SitemapLoc.LastMod` accepts `*time.Time` or a plain string via `LastModValue`.
 - [ ] Support: Additional content types:
   - [ ] Video sitemaps
   - [x] Image sitemaps

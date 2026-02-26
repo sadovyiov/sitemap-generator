@@ -52,7 +52,7 @@ func TestCompleteAction(t *testing.T) {
 		for _, route := range routes {
 			err := sm.Add(&SitemapLoc{
 				Loc:        route,
-				LastMod:    &now,
+				LastMod:    NewLastModTime(&now),
 				ChangeFreq: Always,
 				Priority:   0.4,
 			})
@@ -68,7 +68,7 @@ func TestCompleteAction(t *testing.T) {
 	for _, route := range routes {
 		err := smSixth.Add(&SitemapLoc{
 			Loc:        route,
-			LastMod:    &now,
+			LastMod:    NewLastModTime(&now),
 			ChangeFreq: Daily,
 			Priority:   0.8,
 		})
@@ -134,7 +134,7 @@ func TestLargeURLSetSitemap(t *testing.T) {
 	for _, route := range moreRoutes {
 		err := smLarge.Add(&SitemapLoc{
 			Loc:        route,
-			LastMod:    &now,
+			LastMod:    NewLastModTime(&now),
 			ChangeFreq: Hourly,
 			Priority:   1,
 		})
@@ -178,7 +178,7 @@ func TestLargeURLSetSitemapMax25kEach(t *testing.T) {
 	for _, route := range moreRoutes {
 		err := smLarge.Add(&SitemapLoc{
 			Loc:        route,
-			LastMod:    &now,
+			LastMod:    NewLastModTime(&now),
 			ChangeFreq: Hourly,
 			Priority:   1,
 		})
@@ -224,7 +224,7 @@ func TestBigSizeSitemap(t *testing.T) {
 	for _, route := range bigRoutes {
 		err := smBig.Add(&SitemapLoc{
 			Loc:        route,
-			LastMod:    &now,
+			LastMod:    NewLastModTime(&now),
 			ChangeFreq: Hourly,
 			Priority:   1,
 		})
@@ -264,7 +264,7 @@ func TestSitemapIndexSave(t *testing.T) {
 
 	err := sm.Add(&SitemapLoc{
 		Loc:        testLocation,
-		LastMod:    &now,
+		LastMod:    NewLastModTime(&now),
 		ChangeFreq: Always,
 		Priority:   0.4,
 	})
@@ -315,7 +315,7 @@ func TestSitemapIndexSaveWithServerURI(t *testing.T) {
 
 	err := sm.Add(&SitemapLoc{
 		Loc:        testLocation,
-		LastMod:    &now,
+		LastMod:    NewLastModTime(&now),
 		ChangeFreq: Always,
 		Priority:   0.4,
 	})

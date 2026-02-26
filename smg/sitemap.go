@@ -38,15 +38,16 @@ const (
 // a Linked-List pointing to the next Sitemap for large files.
 type Sitemap struct {
 	Options
-	SitemapIndexLoc *SitemapIndexLoc
-	NextSitemap     *Sitemap
-	maxURLsCount    int
-	fileNum         int
-	urlsCount       int
-	content         bytes.Buffer
-	tempBuf         *bytes.Buffer
-	xmlEncoder      *xml.Encoder
-	isFinalized     bool
+	SitemapIndexLoc  *SitemapIndexLoc
+	NextSitemap      *Sitemap
+	maxURLsCount     int
+	fileNum          int
+	urlsCount        int
+	content          bytes.Buffer
+	tempBuf          *bytes.Buffer
+	xmlEncoder       *xml.Encoder
+	isFinalized      bool
+	urlsetTagWritten bool
 }
 
 // NewSitemap builds and returns a new Sitemap.
@@ -62,16 +63,31 @@ func NewSitemap(prettyPrint bool) *Sitemap {
 	s.prettyPrint = prettyPrint
 	s.content = bytes.Buffer{}
 	s.content.Write([]byte(xml.Header))
-	s.content.Write([]byte(xmlUrlsetOpenTag))
 	s.tempBuf = &bytes.Buffer{}
 	s.Name = "sitemap"
 	s.maxURLsCount = defaultMaxURLsCount
 	s.xmlEncoder = xml.NewEncoder(s.tempBuf)
 	if prettyPrint {
-		s.content.Write([]byte{'\n'})
 		s.xmlEncoder.Indent("", "  ")
 	}
 	return s
+}
+
+// ensureUrlsetTag writes the urlset open tag to the content buffer exactly once.
+// It uses UrlsetOpenTag from Options when set, otherwise falls back to the default constant.
+func (s *Sitemap) ensureUrlsetTag() {
+	if s.urlsetTagWritten {
+		return
+	}
+	tag := s.UrlsetOpenTag
+	if tag == "" {
+		tag = xmlUrlsetOpenTag
+	}
+	s.content.Write([]byte(tag))
+	if s.prettyPrint {
+		s.content.Write([]byte{'\n'})
+	}
+	s.urlsetTagWritten = true
 }
 
 // Add adds an URL to a Sitemap.
@@ -89,6 +105,8 @@ func (s *Sitemap) realAdd(u *SitemapLoc, locN int, locBytes []byte) error {
 		s.NextSitemap.realAdd(u, locN, locBytes)
 		return nil
 	}
+
+	s.ensureUrlsetTag()
 
 	if s.urlsCount >= s.maxURLsCount {
 		s.buildNextSitemap()
@@ -145,6 +163,7 @@ func (s *Sitemap) buildNextSitemap() {
 	s.NextSitemap.Name = s.Name
 	s.NextSitemap.Hostname = s.Hostname
 	s.NextSitemap.OutputPath = s.OutputPath
+	s.NextSitemap.UrlsetOpenTag = s.UrlsetOpenTag
 	s.NextSitemap.maxURLsCount = s.maxURLsCount
 	s.NextSitemap.fileNum = s.fileNum + 1
 }
@@ -206,6 +225,16 @@ func (s *Sitemap) SetCompress(compress bool) {
 	}
 }
 
+// SetUrlsetOpenTag overrides the default <urlset ...> opening tag for this Sitemap.
+// Must be called before any Add or Finalize calls to take effect.
+// When set via SitemapIndex.SetUrlsetOpenTag, it propagates to all child sitemaps automatically.
+func (s *Sitemap) SetUrlsetOpenTag(tag string) {
+	s.UrlsetOpenTag = tag
+	if s.NextSitemap != nil {
+		s.NextSitemap.SetUrlsetOpenTag(tag)
+	}
+}
+
 // SetMaxURLsCount sets the maximum # of URLs for a sitemap
 func (s *Sitemap) SetMaxURLsCount(maxURLsCount int) {
 	s.maxURLsCount = maxURLsCount
@@ -218,6 +247,7 @@ func (s *Sitemap) GetURLsCount() int {
 
 // Finalize closes the XML data set and do not allow any further sm.Add() calls
 func (s *Sitemap) Finalize() {
+	s.ensureUrlsetTag()
 	if s.prettyPrint {
 		s.content.Write([]byte{'\n'})
 	}

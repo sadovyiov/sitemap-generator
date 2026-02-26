@@ -56,7 +56,7 @@ func TestSingleSitemap(t *testing.T) {
 	for _, route := range routes {
 		err := sm.Add(&SitemapLoc{
 			Loc:        route,
-			LastMod:    &now,
+			LastMod:    NewLastModTime(&now),
 			ChangeFreq: Always,
 			Priority:   0.4,
 			Images:     []*SitemapImage{{"path-to-image.jpg"}},
@@ -114,7 +114,7 @@ func TestSitemapAdd(t *testing.T) {
 
 	err := sm.Add(&SitemapLoc{
 		Loc:        testLocation,
-		LastMod:    &now,
+		LastMod:    NewLastModTime(&now),
 		ChangeFreq: Always,
 		Priority:   0.4,
 		Images:     []*SitemapImage{{testImage}, {testImage2}},
@@ -176,7 +176,7 @@ func TestWriteTo(t *testing.T) {
 
 	err := sm.Add(&SitemapLoc{
 		Loc:        testLocation,
-		LastMod:    &now,
+		LastMod:    NewLastModTime(&now),
 		ChangeFreq: Always,
 		Priority:   0.4,
 		Images:     []*SitemapImage{{"path-to-image.jpg"}},

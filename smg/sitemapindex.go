@@ -83,6 +83,7 @@ func (s *SitemapIndex) NewSitemap() *Sitemap {
 	sm.SetHostname(s.Hostname)
 	sm.SetOutputPath(s.OutputPath)
 	sm.SetCompress(s.Compress)
+	sm.SetUrlsetOpenTag(s.UrlsetOpenTag)
 	return sm
 }
 
@@ -115,6 +116,15 @@ func (s *SitemapIndex) SetOutputPath(outputPath string) {
 // and sets it as OutputPath of new Sitemap entries built using NewSitemap method.
 func (s *SitemapIndex) SetServerURI(serverURI string) {
 	s.ServerURI = serverURI
+}
+
+// SetUrlsetOpenTag overrides the default <urlset ...> opening tag for all Sitemaps
+// created by this SitemapIndex. Must be called before Add or Finalize on each sitemap.
+func (s *SitemapIndex) SetUrlsetOpenTag(tag string) {
+	s.UrlsetOpenTag = tag
+	for _, sitemap := range s.Sitemaps {
+		sitemap.SetUrlsetOpenTag(tag)
+	}
 }
 
 // SetCompress sets the Compress option to be either enabled or disabled for SitemapIndex
