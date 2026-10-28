@@ -217,7 +217,11 @@ func (s *SitemapIndex) saveSitemaps() error {
 					log.Println("Error while saving this sitemap:", sm.Name, err)
 					return
 				}
-				output.Path = path.Join(output.Path, s.ServerURI, smFilename)
+				serverURI := s.ServerURI
+				if sm.ServerURI != "" {
+					serverURI = sm.ServerURI
+				}
+				output.Path = path.Join(output.Path, serverURI, smFilename)
 				smIndexLoc := &SitemapIndexLoc{
 					Loc: output.String(),
 				}
@@ -242,7 +246,7 @@ func (s *SitemapIndex) PingSearchEngines(pingURLs ...string) error {
 		wg.Add(1)
 		go func(urlFormat string) {
 			defer wg.Done()
-			
+
 			urlStr := fmt.Sprintf(urlFormat, s.finalURL)
 			log.Println("Pinging", urlStr)
 

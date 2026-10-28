@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 )
@@ -377,4 +378,45 @@ func randString(n int) string {
 		b[i] = letterBytes[rand.Intn(lenLetters)]
 	}
 	return string(b)
+}
+
+// TestSitemapIndexSitemapServerURI tests that a Sitemap-level ServerURI overrides the SitemapIndex one
+// and that Sitemaps can be saved into separate directories.
+func TestSitemapIndexSitemapServerURI(t *testing.T) {
+	path := "./tmp/sitemap_server_uri_test"
+
+	smi := NewSitemapIndex(true)
+	smi.SetCompress(false)
+	smi.SetHostname(baseURL)
+	smi.SetSitemapIndexName("index")
+	smi.SetOutputPath(path)
+	smi.SetServerURI("sitemaps")
+
+	for _, lang := range []string{"uk", "ru"} {
+		sm := smi.NewSitemap()
+		sm.SetName("products")
+		sm.SetOutputPath(path + "/" + lang)
+		sm.SetServerURI("sitemaps/" + lang)
+		if err := sm.Add(&SitemapLoc{Loc: "/p", ChangeFreq: Always, Priority: 0.4}); err != nil {
+			t.Fatal("Unable to add SitemapLoc: ", err)
+		}
+	}
+
+	indexFile, err := smi.Save()
+	if err != nil {
+		t.Fatal("Unable to Save SitemapIndex:", err)
+	}
+	b, err := os.ReadFile(fmt.Sprintf("%s/%s", path, indexFile))
+	if err != nil {
+		t.Fatal("Unable to read index:", err)
+	}
+	for _, lang := range []string{"uk", "ru"} {
+		want := fmt.Sprintf("%s/sitemaps/%s/products.xml", baseURL, lang)
+		if !strings.Contains(string(b), want) {
+			t.Errorf("index does not contain %s:\n%s", want, b)
+		}
+		if _, err := os.Stat(fmt.Sprintf("%s/%s/products.xml", path, lang)); err != nil {
+			t.Errorf("sitemap file for %s not saved: %v", lang, err)
+		}
+	}
 }

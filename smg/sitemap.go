@@ -38,6 +38,8 @@ const (
 // a Linked-List pointing to the next Sitemap for large files.
 type Sitemap struct {
 	Options
+	// ServerURI overrides SitemapIndex.ServerURI for this Sitemap's URL in the index.
+	ServerURI        string
 	SitemapIndexLoc  *SitemapIndexLoc
 	NextSitemap      *Sitemap
 	maxURLsCount     int
@@ -163,6 +165,7 @@ func (s *Sitemap) buildNextSitemap() {
 	s.NextSitemap.Name = s.Name
 	s.NextSitemap.Hostname = s.Hostname
 	s.NextSitemap.OutputPath = s.OutputPath
+	s.NextSitemap.ServerURI = s.ServerURI
 	s.NextSitemap.UrlsetOpenTag = s.UrlsetOpenTag
 	s.NextSitemap.maxURLsCount = s.maxURLsCount
 	s.NextSitemap.fileNum = s.fileNum + 1
@@ -194,6 +197,16 @@ func (s *Sitemap) SetHostname(hostname string) {
 	s.Hostname = hostname
 	if s.NextSitemap != nil {
 		s.NextSitemap.SetHostname(hostname)
+	}
+}
+
+// SetServerURI sets a ServerURI for this Sitemap, used instead of SitemapIndex.ServerURI
+// when building its URL in the SitemapIndex. Pair it with SetOutputPath to place
+// Sitemaps of one SitemapIndex into different directories.
+func (s *Sitemap) SetServerURI(serverURI string) {
+	s.ServerURI = serverURI
+	if s.NextSitemap != nil {
+		s.NextSitemap.SetServerURI(serverURI)
 	}
 }
 
